@@ -1,51 +1,88 @@
-# 👋 Hi, I'm Siddartha Nanuvala
+# Siddartha Nanuvala
 
-🎓 Master's student in **Cybersecurity and Cloud Computing** at École Supérieure d'Ingénieurs Léonard de Vinci, Paris  
-🔍 Passionate about secure systems, cloud infrastructure, decentralized technologies, and full-stack development  
-📍 Based in Paris | 🧠 Actively learning French  
+## Professional Profile
+Master's student specializing in **Cybersecurity and Cloud Computing** at École Supérieure d'Ingénieurs Léonard de Vinci, Paris. Passionate about secure systems, cloud infrastructure, and full-stack development. Currently based in Paris, actively pursuing opportunities in cloud computing and cybersecurity.
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/siddartha-nanuvala)
-[![GitHub](https://img.shields.io/badge/GitHub-Profile-black?style=flat&logo=github)](https://github.com/SiddarthaNanuvala)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/siddartha-nanuvala)
+[![GitHub](https://img.shields.io/badge/GitHub-Follow-black?style=flat&logo=github)](https://github.com/SiddarthaNanuvala)
 [![TryHackMe](https://img.shields.io/badge/TryHackMe-Profile-red?style=flat&logo=tryhackme)](https://tryhackme.com/p/nanuvalasiddarth)
 
----
+## Technical Expertise
 
-## 🔧 Skills Summary
+### Programming Languages & Frameworks
+- **Backend**: Python, Java
+- **Frontend**: JavaScript, HTML5, CSS3, Angular
+- **UI/UX**: Bootstrap, Material Design
 
-- **Languages**: Python, Java, JavaScript, HTML/CSS, Angular, Bootstrap  
-- **Databases**: PostgreSQL, MongoDB, MySQL, Neo4j, Cassandra  
-- **Cloud & DevOps**: Docker, GitHub Actions, GitLab CI/CD  
-- **Cybersecurity**: TLS/HTTPS analysis, Volatility 3 (memory forensics), networking  
-- **Decentralized Tech**: IPFS, Pinata, Blockchain fundamentals  
-- **Soft Skills**: Communication, teamwork, analytical thinking, troubleshooting  
+### Database Technologies
+- **SQL**: PostgreSQL, MySQL
+- **NoSQL**: MongoDB, Neo4j, Cassandra
 
----
+### Cloud & DevOps
+- **Containerization**: Docker
+- **CI/CD**: GitHub Actions, GitLab CI/CD
+- **Cloud Platforms**: AWS, IBM Cloud
 
-## 🚀 Featured Projects
+### Cybersecurity
+- Network Security Analysis
+- Memory Forensics (Volatility 3)
+- TLS/HTTPS Implementation
+- Security Protocol Analysis
 
-- 🔤 **[Language Translator App](https://github.com/SiddarthaNanuvala/Language_Translator_App_siddartha_nanuvala_td1)** – A user-friendly app to translate text across multiple languages.
-- ✅ **[To-Do Application](https://github.com/SiddarthaNanuvala/To-Do-Application)** – A modern containerized task manager built with microservices architecture.
-- 🧮 **[Prime Number Checker](https://github.com/SiddarthaNanuvala/Prime-numebers)** – Python project for prime checking with high-quality code and test coverage.
-- 🎬 **[MovieDB Management](https://github.com/SiddarthaNanuvala/MovieDB-Management-System)** – Relational DB system for movie data with indexing and user roles.
-- 📊 **[LifeSure Dashboard](https://github.com/SiddarthaNanuvala/Life-Sure-Project)** – Insurance data analysis using Plotly & Dash for real-time visualization.
-- 🛒 **[Ecommerce Platform](https://github.com/SiddarthaNanuvala/EcommerceApp-Project)** – Angular + PostgreSQL-based e-commerce app with charts and data grids.
+### Emerging Technologies
+- Blockchain Fundamentals
+- IPFS & Decentralized Storage
+- Smart Contract Development
 
----
+## Featured Projects
 
-## 🎓 Certifications
+### 🎮 Kaprekar Number Game
+An interactive mathematical puzzle implementation that demonstrates the fascinating Kaprekar's constant (6174). This project showcases:
+- Clean Python implementation with type hints
+- Interactive command-line interface
+- Mathematical algorithm visualization
+- Error handling and input validation
+- Step-by-step process demonstration
 
-- 🏗️ AWS APAC Solutions Architecture (Forage)  
-- 🌐 Responsive Web Design – FreeCodeCamp  
-- 🔧 Full Stack Development Intern – Slash Mark IT & SKOLAR  
-- 🌀 Agile Methodology – Enablers  
-- ☁️ Cloud Envisioning – IBM  
+[Try the Game](kaprekar_game.py) | [View Code](kaprekar_game.py)
 
----
+### 🔤 Language Translator App
+A user-friendly application for real-time text translation across multiple languages.
+[View Project](https://github.com/SiddarthaNanuvala/Language_Translator_App_siddartha_nanuvala_td1)
 
-## 📫 Let's Connect!
+### ✅ To-Do Application
+A modern, containerized task management system built with microservices architecture.
+[View Project](https://github.com/SiddarthaNanuvala/To-Do-Application)
 
-I'm actively seeking a 4-month internship (May–August) in **Cloud, DevOps, or Cybersecurity**.  
-Reach out on [LinkedIn](https://www.linkedin.com/in/siddartha-nanuvala) or email me at 📩 **nanuvalasiddartha09@gmail.com**.
+### 🎬 MovieDB Management System
+A comprehensive relational database system for movie data management with advanced indexing and role-based access control.
+[View Project](https://github.com/SiddarthaNanuvala/MovieDB-Management-System)
+
+### 📊 LifeSure Dashboard
+Real-time insurance data visualization platform using Plotly & Dash.
+[View Project](https://github.com/SiddarthaNanuvala/Life-Sure-Project)
+
+### 🛒 E-commerce Platform
+Full-featured e-commerce application built with Angular and PostgreSQL.
+[View Project](https://github.com/SiddarthaNanuvala/EcommerceApp-Project)
+
+## Professional Certifications
+
+- **AWS Solutions Architecture** - AWS APAC (Forage)
+- **Responsive Web Design** - FreeCodeCamp
+- **Full Stack Development** - Slash Mark IT & SKOLAR
+- **Agile Methodology** - Enablers
+- **Cloud Envisioning** - IBM
+
+## Career Objective
+
+Seeking a 4-month internship opportunity (May–August) in Cloud Computing, DevOps, or Cybersecurity. Passionate about implementing secure and scalable solutions in cloud environments.
+
+## Contact Information
+
+- **Email**: nanuvalasiddartha09@gmail.com
+- **LinkedIn**: [Siddartha Nanuvala](https://www.linkedin.com/in/siddartha-nanuvala)
+- **Location**: Paris, France
 
 ---
 
