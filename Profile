@@ -1,0 +1,197 @@
+markdown
+# Interview Project Notes – Siddartha Nanuvala
+DevOps Internship – LNDS (Luxembourg National Data Service)
+Interview: Friday 23 October 2026, 14:00–14:45
+
+> Rule for every answer: say "I" only for what I built myself, "we" for team work.
+> Only quote numbers I can explain (where they came from, how they were measured).
+
+---
+
+## Project 1 – Cloud-Native Intrusion Detection System (Cloud-IDS)
+
+**Repo:** https://github.com/SiddarthaNanuvala/Cloud-IDS-project
+**My role:** ML Lead [add: which DevOps parts I built myself]
+
+### 30-second pitch
+"I built a network intrusion detection service on the CIC-IDS2017 dataset.
+Beyond the model, I made it deployable: a FastAPI service with health checks
+and Prometheus metrics, packaged with Docker, deployed with Kubernetes manifests
+including probes and autoscaling, load-tested with Locust, with a GitHub Actions
+workflow for automated checks."
+
+### The problem
+Network traffic contains attacks (DoS, port scans, brute force) that are hard to
+spot manually. The goal: a service that scores network flows in real time and
+flags anomalies, and that can scale and be monitored like a real production service.
+
+### Architecture (flow)
+Raw CSVs (CIC-IDS2017, 8 files)
+→ preprocessing script (clean, select features, split train/val/test)
+→ training script (autoencoder on normal traffic, threshold = 99th percentile
+  reconstruction error)
+→ model artifacts (ae.pth, scaler.joblib, threshold.json)
+→ FastAPI service in Docker
+→ Kubernetes (Deployment + Service + HPA, optional KEDA)
+→ Prometheus scrapes /metrics → Grafana dashboards
+
+### Components
+
+| Part | What it does | Files |
+| --- | --- | --- |
+| Preprocessing | Loads 8 CSVs, removes infinite/missing values and duplicates, splits data, saves feature schema | scripts/preprocess_cicids2017.py |
+| Training | Trains PyTorch autoencoder on benign traffic, computes anomaly threshold | scripts/train_autoencoder.py |
+| Evaluation | Precision, recall, F1, ROC-AUC, PR-AUC | scripts/evaluate_model.py |
+| API | /score, /batch_score, /health, /metrics | app/main.py |
+| Container | python:3.10-slim image, health check, port 8000, uvicorn | Dockerfile |
+| Orchestration | Deployment with probes, Service, HPA (1–10 replicas), KEDA scaler | k8s/ |
+| Load testing | Locust, 500 concurrent users, anomaly injection | scripts/locustfile.py |
+| CI | GitHub Actions workflow [check: what each step runs] | .github/workflows/ |
+
+### How the model works (simple)
+- An **autoencoder** learns to compress and rebuild *normal* traffic.
+- On an attack, it rebuilds badly → high **reconstruction error**.
+- If the error is above the threshold (99th percentile on normal data) → anomaly.
+- First version used **Isolation Forest** (isolates outliers in random trees);
+  v2 moved to the autoencoder.
+
+### Dockerfile walkthrough (be ready to explain line by line)
+- `FROM python:3.10-slim` → small base image
+- `PYTHONUNBUFFERED=1` → logs appear immediately
+- installs build-essential, then cleans apt lists to reduce size
+- copies app code, model artifacts, requirements, installs with `--no-cache-dir`
+- `HEALTHCHECK` calls /health every 30 s, 3 retries
+- `EXPOSE 8000`, runs `uvicorn app.main:app`
+
+### Kubernetes concepts used
+- **Deployment:** keeps N replicas running, enables rolling updates
+- **Readiness probe:** pod only receives traffic when ready
+- **Liveness probe:** Kubernetes restarts the pod if it stops responding
+- **Service:** stable network endpoint in front of the pods
+- **HPA:** scales 1–10 replicas based on CPU/memory
+- **KEDA:** scales on custom metrics, e.g. Prometheus request rate
+
+### Numbers – know where they come from
+- 2.8M+ network flows (dataset size)
+- <1 ms inference latency, 1,000+ events/sec [how measured? Locust? which machine?]
+- 97%+ accuracy [on which test set? also know precision/recall – accuracy alone
+  is weak on imbalanced data]
+
+### What I would improve (great answer to "what would you do differently?")
+1. Run the container as a **non-root user** (`USER` instruction) – security.
+2. **Multi-stage build** so build-essential is not in the final image – smaller, safer.
+3. **Pin dependency versions** for reproducible builds.
+4. Don't commit model files (model.pkl) to Git → store in an artifact registry.
+5. Add **image scanning** (Trivy) and **linting/tests** on every pull request.
+6. Provision the cluster/VMs with **Terraform** and configure nodes with **Ansible**.
+7. Move to a **GitLab CI** pipeline: lint → test → build → scan → deploy.
+
+### Link to LNDS
+- Probes, health checks, monitoring → **reliability**
+- Reproducible Docker builds → **reproducibility**
+- CI checks before merge → same idea as **Project 2 (MR validation)**
+- Security background (IDS) → LNDS's focus on **trust and security**
+
+### Likely questions
+- What did *you* build vs the team?
+- Readiness vs liveness probe?
+- How does HPA decide to scale?
+- Why expose /metrics?
+- What does your CI workflow run?
+- Why an autoencoder for anomaly detection?
+- How would you secure this deployment?
+
+---
+
+## Project 2 – RAG Application (ESILV Pi2, BNP Paribas Cardif use case)
+
+**Repo:** https://github.com/SiddarthaNanuvala/A5_Pi2_Project_BNP_Paribas
+**My role:** [add: what I built myself]
+
+### 30-second pitch
+"I built a FastAPI API that answers questions about private documents. It splits
+documents into overlapping chunks, turns them into embeddings, stores them in a
+FAISS vector index, and for each question retrieves the 3 most relevant chunks
+and sends them to Gemini, which answers with the sources."
+
+### The problem
+LLMs don't know private company documents, and you can't send hundreds of pages
+with every question. RAG finds only the relevant passages, so answers are based
+on real documents → fewer hallucinations, with traceable sources.
+
+### Architecture (flow)
+Markdown files in files/
+→ /embedding router: split into chunks (1,000 chars, 200 overlap)
+→ Google embedding-001 → vectors
+→ FAISS index + metadata (file name, chunk ID, source)
+
+User question
+→ /rag router: embed question → FAISS similarity search → top 3 chunks
+→ prompt template (prompts/rag_prompt.txt) + Gemini 2.5 Flash
+→ answer + context + sources
+
+### Key concepts (simple)
+- **Chunk:** small piece of a document (more precise search)
+- **Overlap:** avoids losing information at chunk borders
+- **Embedding:** list of numbers representing meaning; similar meaning → close vectors
+- **FAISS:** fast similarity search library (vector index)
+- **Prompt template:** fixed instructions telling the model to answer only from context
+
+### Tooling
+- Python 3.13, FastAPI, **uv** for dependency management (pyproject.toml, uv.lock
+  → reproducible installs)
+- Config via `.env` (GOOGLE_API_KEY)
+
+### ⚠ Before the interview
+- [ ] Check that no real API key is committed in the repo. If it is: rotate the key,
+      remove it, clean Git history.
+- [ ] CV says "deployed on Kubernetes with CI/CD, zero-downtime releases" – the repo
+      shows no K8s files or pipeline. Know exactly where/how it was deployed,
+      or describe it honestly as an API project.
+
+### What I would improve
+1. Secrets in a **secrets manager** / CI masked variables, never in the repo.
+2. Add **tests** (pytest) and **linting** (ruff) in a CI pipeline on every MR.
+3. Add a **Dockerfile** and K8s manifests with probes.
+4. Store the FAISS index on **persistent storage**, rebuild via a pipeline job.
+5. Add monitoring: request latency, errors, LLM API usage.
+
+### Link to LNDS
+- Document ingestion with metadata and sources → **traceability**
+- Handling private data → **trust, secondary use of data** (LNDS's core mission)
+
+### Likely questions
+- Explain RAG simply.
+- Why chunks and why overlap?
+- What is FAISS?
+- How do you keep the API key safe?
+- How would you deploy this in production?
+
+---
+
+## Other projects on my profile
+
+| Project | Relevance to LNDS | Status |
+| --- | --- | --- |
+| K8s-Microservices-Lab (Helm, GitHub Actions, Prometheus/Grafana, Terraform) | High – IaC + CI/CD | Link broken – fix or remove |
+| GraphRAG-Pipeline (Neo4j, FastAPI, K8s, GitHub Actions) | Medium | Link broken – fix or remove |
+| Cloud-IDS (featured link) | High | Link broken – point to Cloud-IDS-project |
+| EcommerceApp-Project (Angular, PostgreSQL, Docker) | Low–medium – containerisation | Pinned |
+| MovieDB-Management-System (Oracle SQL, role-based security) | Low – access control | Pinned |
+| Life-Sure-Project (Plotly, Dash) | Low | – |
+
+---
+
+## Bridge: my experience → LNDS projects
+
+| LNDS needs | What I can show |
+| --- | --- |
+| GitLab CI MR validation | CI workflow in Cloud-IDS (GitHub Actions) – same concepts; ideas for lint/test/scan stages |
+| Ansible host_vars automation | [course lab / demo repo] + Python scripting for YAML and APIs |
+| Python / Bash | Preprocessing, training, API, Locust scripts |
+| IaC | [Terraform example] + Kubernetes manifests as declarative config |
+| Reliability | Probes, health checks, HPA, Prometheus metrics |
+| Security | IDS project, ISO 27001/27005, secrets handling |
+| Documentation | READMEs, deployment guide, architecture diagrams in Cloud-IDS |
+
+---
